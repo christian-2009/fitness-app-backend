@@ -29,13 +29,8 @@ app.use(express.json());
 
 //When this route is called, return the most recent 100 signatures in the db
 app.get("/weights", async (req, res) => {
-  const weights = await client.query("SELECT * FROM weight LIMIT 10"); //FIXME-TASK: get signatures from db!
-  res.status(200).json({
-    status: "success",
-    data: {
-      weights,
-    },
-  });
+  const weights = await client.query("SELECT * FROM weight "); //FIXME-TASK: get signatures from db!
+  res.send(weights.rows)
 });
 
 app.get("/weights/:id", async (req, res) => {
@@ -81,7 +76,7 @@ app.post("/weights", async (req, res) => {
   const { weight } = req.body;
   if (typeof weight === "string") {
     const createdSignature = await client.query(
-      "INSERT INTO weight (weight) VALUES ($1)",
+      "INSERT INTO weight (weight, dates) VALUES ($1, current_timestamp)",
       [weight]
     ); //FIXME-TASK: insert the supplied signature object into the DB
 

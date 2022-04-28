@@ -1,16 +1,14 @@
 import express from "express";
 import cors from "cors";
-const { Client } = require("pg");
-// const Client = require('pg').Client;
-// import pg from 'pg';
-// const Client = pg.Client;
-// const Client = require('pg')
+import { config } from "dotenv";
+import { Client } from "pg";
 
 //As your database is on your local machine, with default port,
 //and default username and password,
 //we only need to specify the (non-default) database name.
+config();
 const PORT_NUMBER = 4000;
-const herokuSSLSetting = { rejectUnauthorised: false };
+const herokuSSLSetting = { rejectUnauthorized: false };
 const sslSetting = process.env.LOCAL ? false : herokuSSLSetting;
 
 const dbConfig = {
@@ -18,17 +16,16 @@ const dbConfig = {
   ssl: sslSetting,
 };
 
-const client = new Client(dbConfig);
-
-client.connect();
-
 const app = express();
+app.use(cors());
+app.use(express.json());
+
+const client = new Client(dbConfig);
+client.connect();
 
 /**
  * Simplest way to connect a front-end. Unimportant detail right now, although you can read more: https://flaviocopes.com/express-cors/
  */
-app.use(cors());
-app.use(express.json());
 
 //When this route is called, return the most recent 100 signatures in the db
 app.get("/weights", async (req, res) => {

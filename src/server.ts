@@ -10,14 +10,13 @@ const { Client } = require("pg");
 //and default username and password,
 //we only need to specify the (non-default) database name.
 const PORT_NUMBER = 4000;
-const herokuSSLSetting = {rejectUnauthorised: false}
-const sslSetting = process.env.LOCAL ? false : herokuSSLSetting
+const herokuSSLSetting = { rejectUnauthorised: false };
+const sslSetting = process.env.LOCAL ? false : herokuSSLSetting;
 
 const dbConfig = {
   connectionString: process.env.DATABASE_URL,
-  ssl: sslSetting
-}
-
+  ssl: sslSetting,
+};
 
 const client = new Client(dbConfig);
 
@@ -33,8 +32,10 @@ app.use(express.json());
 
 //When this route is called, return the most recent 100 signatures in the db
 app.get("/weights", async (req, res) => {
-  const weights = await client.query("SELECT * FROM weight order by dates desc "); //FIXME-TASK: get signatures from db!
-  res.send(weights.rows)
+  const weights = await client.query(
+    "SELECT * FROM weight order by dates desc "
+  ); //FIXME-TASK: get signatures from db!
+  res.send(weights.rows);
 });
 
 app.get("/weights/:id", async (req, res) => {
@@ -55,7 +56,7 @@ app.post("/weights", async (req, res) => {
     const createdSignature = await client.query(
       "INSERT INTO weight (weight, dates) VALUES ($1, current_timestamp)",
       [weight]
-    ); 
+    );
 
     res.status(201).json({
       status: "success",

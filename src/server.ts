@@ -27,11 +27,10 @@ client.connect();
  * Simplest way to connect a front-end. Unimportant detail right now, although you can read more: https://flaviocopes.com/express-cors/
  */
 
-//When this route is called, return the most recent 100 signatures in the db
 app.get("/weights", async (req, res) => {
   const weights = await client.query(
     "SELECT * FROM weight order by dates desc "
-  ); //FIXME-TASK: get signatures from db!
+  ); 
   res.send(weights.rows);
 });
 
@@ -71,42 +70,42 @@ app.post("/weights", async (req, res) => {
   }
 });
 
-//update a signature.
-app.put("/signatures/:id", async (req, res) => {
-  //  :id refers to a route parameter, which will be made available in req.params.id
-  const { name, message } = req.body;
-  const id = parseInt(req.params.id);
-  if (typeof name === "string") {
-    const result: any = await client.query(
-      "UPDATE signatures SET signature = $1, message = $2 WHERE id = $3",
-      [name, message, id]
-    ); //FIXME-TASK: update the signature with given id in the DB.
 
-    if (result.rowCount === 1) {
-      const updatedSignature = result.rows[0];
-      res.status(200).json({
-        status: "success",
-        data: {
-          signature: updatedSignature,
-        },
-      });
-    } else {
-      res.status(404).json({
-        status: "fail",
-        data: {
-          id: "Could not find a signature with that id identifier",
-        },
-      });
-    }
-  } else {
-    res.status(400).json({
-      status: "fail",
-      data: {
-        name: "A string value for name is required in your JSON body",
-      },
-    });
-  }
-});
+// app.put("/signatures/:id", async (req, res) => {
+//   //  :id refers to a route parameter, which will be made available in req.params.id
+//   const { name, message } = req.body;
+//   const id = parseInt(req.params.id);
+//   if (typeof name === "string") {
+//     const result: any = await client.query(
+//       "UPDATE signatures SET signature = $1, message = $2 WHERE id = $3",
+//       [name, message, id]
+//     ); //FIXME-TASK: update the signature with given id in the DB.
+
+//     if (result.rowCount === 1) {
+//       const updatedSignature = result.rows[0];
+//       res.status(200).json({
+//         status: "success",
+//         data: {
+//           signature: updatedSignature,
+//         },
+//       });
+//     } else {
+//       res.status(404).json({
+//         status: "fail",
+//         data: {
+//           id: "Could not find a signature with that id identifier",
+//         },
+//       });
+//     }
+//   } else {
+//     res.status(400).json({
+//       status: "fail",
+//       data: {
+//         name: "A string value for name is required in your JSON body",
+//       },
+//     });
+//   }
+// });
 
 app.listen(PORT_NUMBER, () => {
   console.log(`Server is listening on port ${PORT_NUMBER}!`);

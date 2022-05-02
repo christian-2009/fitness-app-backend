@@ -56,6 +56,12 @@ app.post("/weights", async (req, res) => {
   }
 });
 
+app.delete("/weights/:id", async (req, res) => {
+  const id = req.params.id;
+  await client.query("delete from weight where id = $1", [id]);
+  res.json({ status: "success" });
+});
+
 // app.put("/signatures/:id", async (req, res) => {
 //   //  :id refers to a route parameter, which will be made available in req.params.id
 //   const { name, message } = req.body;

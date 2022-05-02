@@ -7,7 +7,7 @@ import { Client } from "pg";
 //and default username and password,
 //we only need to specify the (non-default) database name.
 config();
-const PORT_NUMBER = 4000;
+
 const herokuSSLSetting = { rejectUnauthorized: false };
 const sslSetting = process.env.LOCAL ? false : herokuSSLSetting;
 
@@ -26,6 +26,10 @@ client.connect();
 /**
  * Simplest way to connect a front-end. Unimportant detail right now, although you can read more: https://flaviocopes.com/express-cors/
  */
+
+app.get("/", async (req, res) => {
+  res.json({status: "app is listening"})
+})
 
 app.get("/weights", async (req, res) => {
   const weights = await client.query(
@@ -89,8 +93,13 @@ app.post("/weights", async (req, res) => {
 //   }
 // });
 
-app.listen(PORT_NUMBER, () => {
-  console.log(`Server is listening on port ${PORT_NUMBER}!`);
+const port = process.env.PORT;
+if (!port) {
+  throw 'Missing PORT environment variable.  Set it in .env file.';
+}
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}!`);
 });
 
 export default app;

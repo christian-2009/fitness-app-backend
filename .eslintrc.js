@@ -20,6 +20,6 @@ module.exports = {
         },
       },
     ],
-    "@typescript-eslint/no-empty-interface": 0
+    "@typescript-eslint/no-empty-interface": 0,
   },
 };

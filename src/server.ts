@@ -28,8 +28,8 @@ client.connect();
  */
 
 app.get("/", async (req, res) => {
-  res.json({status: "app is listening"})
-})
+  res.json({ status: "app is listening" });
+});
 
 app.get("/weights", async (req, res) => {
   const weights = await client.query(
@@ -42,7 +42,7 @@ app.get("/weights/:id", async (req, res) => {
   const weight = await client.query("SELECT * FROM weight WHERE id = $1", [
     req.params.id,
   ]);
-  res.json(weight.rows)
+  res.json(weight.rows);
 });
 
 app.post("/weights", async (req, res) => {
@@ -52,8 +52,7 @@ app.post("/weights", async (req, res) => {
       "INSERT INTO weight (weight, dates) VALUES ($1, current_timestamp)",
       [weight]
     );
-    res.status(201).json({status: "success"}
-    );
+    res.status(201).json({ status: "success" });
   }
 });
 
@@ -95,7 +94,7 @@ app.post("/weights", async (req, res) => {
 
 const port = process.env.PORT;
 if (!port) {
-  throw 'Missing PORT environment variable.  Set it in .env file.';
+  throw "Missing PORT environment variable.  Set it in .env file.";
 }
 
 app.listen(port, () => {

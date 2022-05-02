@@ -29,44 +29,27 @@ client.connect();
 
 app.get("/weights", async (req, res) => {
   const weights = await client.query(
-    "SELECT * FROM weight order by dates desc "
+    "select * from weight order by dates desc "
   );
-  res.send(weights.rows);
+  res.json(weights.rows);
 });
 
 app.get("/weights/:id", async (req, res) => {
   const weight = await client.query("SELECT * FROM weight WHERE id = $1", [
     req.params.id,
   ]);
-  res.status(200).json({
-    status: "success",
-    data: {
-      weight,
-    },
-  });
+  res.json(weight.rows)
 });
 
 app.post("/weights", async (req, res) => {
   const { weight } = req.body;
   if (typeof weight === "string") {
-    const createdSignature = await client.query(
+    await client.query(
       "INSERT INTO weight (weight, dates) VALUES ($1, current_timestamp)",
       [weight]
     );
-
-    res.status(201).json({
-      status: "success",
-      data: {
-        signature: createdSignature,
-      },
-    });
-  } else {
-    res.status(400).json({
-      status: "fail",
-      data: {
-        name: "A string value for name is required in your JSON body",
-      },
-    });
+    res.status(201).json({status: "success"}
+    );
   }
 });
 

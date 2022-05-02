@@ -39,7 +39,7 @@ app.get("/weights", async (req, res) => {
 });
 
 app.get("/weights/:id", async (req, res) => {
-  const weight = await client.query("SELECT * FROM weight WHERE id = $1", [
+  const weight = await client.query("select * from weight where id = $1", [
     req.params.id,
   ]);
   res.json(weight.rows);
@@ -49,7 +49,7 @@ app.post("/weights", async (req, res) => {
   const { weight } = req.body;
   if (typeof weight === "string") {
     await client.query(
-      "INSERT INTO weight (weight, dates) VALUES ($1, current_timestamp)",
+      "insert into weight (weight, dates) values ($1, now())",
       [weight]
     );
     res.status(201).json({ status: "success" });

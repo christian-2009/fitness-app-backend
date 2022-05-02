@@ -17,8 +17,8 @@ const dbConfig = {
 };
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
 const client = new Client(dbConfig);
 client.connect();
@@ -30,7 +30,7 @@ client.connect();
 app.get("/weights", async (req, res) => {
   const weights = await client.query(
     "SELECT * FROM weight order by dates desc "
-  ); 
+  );
   res.send(weights.rows);
 });
 
@@ -69,7 +69,6 @@ app.post("/weights", async (req, res) => {
     });
   }
 });
-
 
 // app.put("/signatures/:id", async (req, res) => {
 //   //  :id refers to a route parameter, which will be made available in req.params.id

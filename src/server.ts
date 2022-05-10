@@ -35,11 +35,13 @@ app.get("/weights", async (req, res) => {
   const weights = await client.query(
     "select * from weight order by dates desc "
   );
+  res.set('Access-Control-Allow-Origin', '*')
   res.json(weights.rows);
 });
 
 app.get('/weights/goal', async (req,res) => {
   const goalWeight = await client.query('select * from weight where type = $1', ['goal'])
+  res.set('Access-Control-Allow-Origin', '*')
   res.json(goalWeight.rows)
 })
 
@@ -47,6 +49,7 @@ app.get("/weights/:id", async (req, res) => {
   const weight = await client.query("select * from weight where id = $1 and type = $2" , [
     req.params.id, 'weight'
   ]);
+  res.set('Access-Control-Allow-Origin', '*')
   res.json(weight.rows);
 });
 

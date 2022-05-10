@@ -38,23 +38,36 @@ app.get("/weights", async (req, res) => {
   res.json(weights.rows);
 });
 
+app.get('/weights/goal', async (req,res) => {
+  const goalWeight = await client.query('select * from weight where type = $1', ['goal'])
+  res.json(goalWeight.rows)
+})
+
 app.get("/weights/:id", async (req, res) => {
-  const weight = await client.query("select * from weight where id = $1", [
-    req.params.id,
+  const weight = await client.query("select * from weight where id = $1 and type = $2" , [
+    req.params.id, 'weight'
   ]);
   res.json(weight.rows);
 });
 
 app.post("/weights", async (req, res) => {
-  const { weight } = req.body;
+  const { weight, type} = req.body;
   if (typeof weight === "string") {
     await client.query(
-      "insert into weight (weight, dates) values ($1, now())",
-      [weight]
+      "insert into weight (weight, dates, type) values ($1, now(), $2)",
+      [weight, type]
     );
     res.status(201).json({ status: "success" });
   }
 });
+
+app.put("/weights/goals", async (req, res) => {
+  const {weight} = req.body
+  if (typeof weight === "string") {
+    await client.query('update weight set weight = $1 WHERE type = $2', [weight, 'goal']);
+  res.status(201).json({ status: "success"})
+}
+})
 
 app.delete("/weights/:id", async (req, res) => {
   const id = req.params.id;

@@ -39,7 +39,7 @@ app.get("/weights", async (req, res) => {
   res.json(weights.rows);
 });
 
-app.get('/weights/goal', async (req,res) => {
+app.get('/weights/goals', async (req,res) => {
   const goalWeight = await client.query('select * from weight where type = $1', ['goal'])
   res.set('Access-Control-Allow-Origin', '*')
   res.json(goalWeight.rows)
